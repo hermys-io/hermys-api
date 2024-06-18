@@ -1,0 +1,67 @@
+[tool.poetry]
+name = "hermys-api"
+version = "0.1.0"
+description = ""
+authors = ["Marcus Gabriel <marcusgabriel.ds@gmail.com>"]
+readme = "README.md"
+packages = [{ include = "hermys_api" }]
+
+[tool.poetry.dependencies]
+python = "~3.11"
+hypercorn = { extras = ["trio"], version = "^0.17.3" }
+fastapi = "0.111.0"
+motor = "3.4.0"
+pydantic-settings = "2.3.3"
+python-jose = { extras = ["cryptography"], version = "3.3.0" }
+argon2-cffi = "23.1.0"
+scout-apm = "^3.1.0"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "0.4.9"
+taskipy = "1.12.2"
+mypy = "1.10.0"
+blue = "0.9.1"
+pytest = "8.2.2"
+anyio = "4.4.0"
+pytest-cov = "5.0.0"
+isort = "5.13.2"
+freezegun = "1.5.1"
+types-passlib = "1.7.7.20240327"
+types-python-jose = "3.3.4.20240106"
+
+[tool.taskipy.tasks]
+dev = { cmd = "poetry run uvicorn hermys.main:app --reload", help = "Runs develop server" }
+format = { cmd = "blue . && isort .", help = "Run blue and isort" }
+lint = { cmd = "ruff check . && mypy .", help = "Run ruff and mypy" }
+test = { cmd = "pytest -ss --cov=./hermys --cov-report=term --cov-report=html tests", help = "Run all tests" }
+test_pdb = { cmd = "pytest --pdb -ss --cov=./hermys --cov-report=term --cov-report=html tests", help = "Run all tests with pdb flag" }
+test_html = { cmd = "pytest -ss --cov=./hermys --cov-report=term --cov-report=html tests && open ./htmlcov/index.html", help = "Run all tests with html report" }
+
+[tool.isort]
+profile = "black"
+line_length = 79
+
+[tool.ruff.lint.isort]
+known-third-party = ["fastapi", "pydantic", "starlette"]
+
+[tool.ruff]
+line-length = 79
+select = [
+  "E",   # pycodestyle errors
+  "W",   # pycodestyle warnings
+  "F",   # pyflakes
+  "I",   # isort
+  "C",   # flake8-comprehensions
+  "B",   # flake8-bugbear
+  "S",   # flake8-bandit
+  "C90", # mccabe
+]
+ignore = ["S101"]
+
+[tool.pyright]
+reportUnknownMemberType = false
+reportUnknownVariableType = false
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
