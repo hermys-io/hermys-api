@@ -18,6 +18,9 @@ class Settings(BaseSettings):
     # CORS settings
     ALLOWED_ORIGINS: str
 
+    # Scout APM
+    SCOUT_KEY: str
+
 
 @cache
 def get_settings():

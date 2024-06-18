@@ -13,7 +13,7 @@ from hermys.settings import get_settings
 
 settings = get_settings()
 Config.set(
-    key='504d3050ee266f4f3be0f129f1fdfa43',
+    key=settings.SCOUT_KEY,
     name='Hermys API - FastAPI',
     monitor=True,
 )
