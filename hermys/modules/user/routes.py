@@ -7,12 +7,12 @@ from hermys.modules.user.schemas import UserCreatePayload, UserRetrieve
 router = APIRouter()
 
 
-@router.get("/me")
+@router.get('/me')
 async def get_current_authenticated_user(current_user: GetCurrentUser):
     return UserRetrieve.model_validate(current_user.model_dump()).model_dump()
 
 
-@router.post("/")
+@router.post('/')
 async def create_user(
     payload: UserCreatePayload,
     shared_user_service: GetSharedUserService,
