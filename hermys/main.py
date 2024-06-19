@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import ORJSONResponse
-from scout_apm.api import Config  # type: ignore
 from scout_apm.async_.starlette import ScoutMiddleware  # type: ignore
 
 from hermys.db.dependencies import GetSharedDB
@@ -9,17 +8,18 @@ from hermys.modules.auth.exceptions import bind_auth_exceptions
 from hermys.modules.auth.routes import router as auth_router
 from hermys.modules.user.exceptions import bind_user_exceptions
 from hermys.modules.user.routes import router as user_router
+from hermys.scount_apm.config import configure_scout_apm
 from hermys.settings import get_settings
 
 settings = get_settings()
-Config.set(
-    key=settings.SCOUT_KEY,
-    name='Hermys API - FastAPI',
-    monitor=True,
+configure_scout_apm()
+
+app = FastAPI(
+    title='Hermys API',
+    default_response_class=ORJSONResponse,
 )
 
-app = FastAPI(title='Hermys API')
-
+# Middlewares
 app.add_middleware(ScoutMiddleware)
 app.add_middleware(
     CORSMiddleware,
@@ -46,14 +46,13 @@ app.include_router(
     router=auth_router,
     prefix='/auth',
     tags=['auth'],
-    default_response_class=ORJSONResponse,
 )
 app.include_router(
     router=user_router,
     prefix='/users',
     tags=['users'],
-    default_response_class=ORJSONResponse,
 )
+
 
 # Custom exceptions
 bind_auth_exceptions(app)
