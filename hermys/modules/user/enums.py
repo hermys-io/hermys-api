@@ -2,4 +2,4 @@ from enum import Enum
 
 
 class UserRoleEnum(str, Enum):
-    ADMIN = 'admin'
+    GOD = 'god'

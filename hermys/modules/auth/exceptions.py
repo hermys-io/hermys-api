@@ -10,6 +10,10 @@ class DoesNotHavePermission(Exception):
     ...
 
 
+class Unauthorized(Exception):
+    ...
+
+
 def bind_auth_exceptions(app: FastAPI):
     @app.exception_handler(IncorrectUsernameOrPassword)
     def incorrect_username_or_password(  # type: ignore
@@ -34,5 +38,18 @@ def bind_auth_exceptions(app: FastAPI):
             content={
                 'detail': 'Does not have permission',
                 'code': 'PERMISSION_ERROR',
+            },
+        )
+
+    @app.exception_handler(Unauthorized)
+    def unauthorized(  # type: ignore
+        _request: Request,
+        _exc: Unauthorized,
+    ):  # type: ignore
+        return ORJSONResponse(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            content={
+                'detail': 'Incorrect credentials',
+                'code': 'UNAUTHORIZED_ERROR',
             },
         )

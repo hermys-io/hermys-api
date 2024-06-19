@@ -13,7 +13,7 @@ async def test_create_user(shared_db: AsyncIOMotorDatabase):
         username='email@email.com',
         password='12345Aa@',  # noqa: S106
         organization='hermys',
-        role=UserRoleEnum.ADMIN,
+        role=UserRoleEnum.GOD,
     )
 
     repo = UserRepository(db=shared_db)
@@ -33,7 +33,7 @@ async def test_user_already_exists(shared_db: AsyncIOMotorDatabase):
         username='email@email.com',
         password='12345Aa@',  # noqa: S106
         organization='hermys',
-        role=UserRoleEnum.ADMIN,
+        role=UserRoleEnum.GOD,
     )
 
     repo = UserRepository(db=shared_db)

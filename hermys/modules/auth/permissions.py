@@ -1,5 +1,5 @@
 from functools import wraps
-from typing import Any, Callable, TypeVar
+from typing import Any, Callable, List, TypeVar
 
 from fastapi import FastAPI
 
@@ -13,7 +13,7 @@ F = TypeVar('F', bound=Callable[..., Any])
 app = FastAPI()
 
 
-def with_permissions(roles: str) -> Callable[[F], F]:
+def with_permissions(roles: List[str]) -> Callable[[F], F]:
     def decorator(func: F) -> F:
         @wraps(func)
         async def wrapper(*args: Any, **kwargs: Any) -> Any:
@@ -22,7 +22,7 @@ def with_permissions(roles: str) -> Callable[[F], F]:
             if not user:
                 raise EnvironmentError('Current online user was not provided')
 
-            if user.role == UserRoleEnum.ADMIN or user.role in roles:
+            if user.role == UserRoleEnum.GOD or user.role in roles:
                 result = await func(*args, **kwargs)
                 return result
 

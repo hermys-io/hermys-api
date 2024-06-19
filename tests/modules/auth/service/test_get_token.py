@@ -17,7 +17,7 @@ async def test_get_token(shared_db: AsyncIOMotorDatabase):
         username='email@email.com',
         password='12345Aa@',  # noqa: S106
         organization='test',
-        role=UserRoleEnum.ADMIN,
+        role=UserRoleEnum.GOD,
     )
     await user_repo.create(payload=payload)
 
@@ -40,7 +40,7 @@ async def test_get_token_wrong_password(shared_db: AsyncIOMotorDatabase):
         username='email@email.com',
         password='12345Aa@',  # noqa: S106
         organization='test',
-        role=UserRoleEnum.ADMIN,
+        role=UserRoleEnum.GOD,
     )
     await user_repo.create(payload=payload)
 

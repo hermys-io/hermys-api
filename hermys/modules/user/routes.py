@@ -1,5 +1,7 @@
 from fastapi import APIRouter
 
+from hermys.modules.auth.dependencies import GetCurrentUser
+from hermys.modules.auth.permissions import with_permissions
 from hermys.modules.user.dependencies import GetSharedUserService
 from hermys.modules.user.schemas import UserCreatePayload
 
@@ -16,3 +18,9 @@ async def create_user(
     )
 
     return result.model_dump()
+
+
+@router.get('/')
+@with_permissions(roles=['admin'])
+async def aaaa(current_user: GetCurrentUser):
+    return current_user.model_dump()

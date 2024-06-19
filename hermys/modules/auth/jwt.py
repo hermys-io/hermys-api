@@ -1,8 +1,9 @@
 from datetime import datetime, timedelta, timezone
 from typing import Any, Dict
 
-from jose import jwt
+from jose import JWTError, jwt
 
+from hermys.modules.auth.exceptions import Unauthorized
 from hermys.settings import get_settings
 
 settings = get_settings()
@@ -29,3 +30,15 @@ def create_token(
     )
 
     return encoded_jwt
+
+
+def decode_token(*, token: str):
+    try:
+        decoded_data = jwt.decode(
+            token=token,
+            key=settings.SECRET_KEY,
+            algorithms=settings.ALGORITHM,
+        )
+        return decoded_data
+    except JWTError as e:
+        raise Unauthorized() from e
