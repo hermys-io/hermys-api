@@ -12,7 +12,7 @@ async def test_get_by_id(shared_db: AsyncIOMotorDatabase):
         username='email@email.com',
         password='12345Aa@',  # noqa: S106
         organization='hermys',
-        role=UserRoleEnum.GOD,
+        role=UserRoleEnum.ADMIN,
     )
 
     repo = UserRepository(db=shared_db)
@@ -29,7 +29,7 @@ async def test_get_by_email(shared_db: AsyncIOMotorDatabase):
         username='email@email.com',
         password='12345Aa@',  # noqa: S106
         organization='hermys',
-        role=UserRoleEnum.GOD,
+        role=UserRoleEnum.ADMIN,
     )
 
     repo = UserRepository(db=shared_db)

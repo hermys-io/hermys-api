@@ -3,6 +3,7 @@ from typing import Union
 from bson import ObjectId
 from motor.motor_asyncio import AsyncIOMotorDatabase
 
+from hermys.modules.user.enums import UserRoleEnum
 from hermys.modules.user.exceptions import UserAlreadyExists, UserNotFound
 from hermys.modules.user.schemas import UserCreatePayload, UserInternal
 
@@ -22,6 +23,14 @@ class UserRepository:
 
         result = await self.collection.insert_one(payload_dict)
         return await self.get_or_rise(by='_id', value=result.inserted_id)
+
+    async def list(self, *, organization: str):
+        default_filter = {
+            'organization': organization,
+            'role': {'$ne': UserRoleEnum.GOD},
+        }
+        results = await self.collection.find(default_filter).to_list(None)
+        return [UserInternal.model_validate(result) for result in results]
 
     async def get(
         self,

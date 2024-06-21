@@ -14,7 +14,7 @@ async def test_token(client: TestClient, shared_db: AsyncIOMotorDatabase):
         username='email@email.com',
         password='12345Aa@',  # noqa: S106
         organization='test',
-        role=UserRoleEnum.GOD,
+        role=UserRoleEnum.ADMIN,
     )
     await user_repo.create(payload=user_payload)
 

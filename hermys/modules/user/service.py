@@ -6,9 +6,14 @@ class UserService:
     def __init__(self, user_repo: UserRepository) -> None:
         self.user_repo = user_repo
 
-    async def create_and_send_confirmation_email(
+    async def create(
         self,
         *,
         payload: UserCreatePayload,
     ) -> UserRetrieve:
-        return await self.user_repo.create(payload=payload)
+        created_user = await self.user_repo.create(payload=payload)
+        return UserRetrieve(**created_user.model_dump())
+
+    async def list(self, *, organization: str):
+        results = await self.user_repo.list(organization=organization)
+        return [UserRetrieve(**result.model_dump()) for result in results]

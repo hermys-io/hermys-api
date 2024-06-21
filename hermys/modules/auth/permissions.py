@@ -13,11 +13,14 @@ F = TypeVar('F', bound=Callable[..., Any])
 app = FastAPI()
 
 
-def with_permissions(roles: List[str]) -> Callable[[F], F]:
+def with_permissions(roles: List[UserRoleEnum]) -> Callable[[F], F]:
     def decorator(func: F) -> F:
         @wraps(func)
         async def wrapper(*args: Any, **kwargs: Any) -> Any:
-            user: UserInternal | None = kwargs.get('current_user')
+            current_user = kwargs.get('current_user')
+            _current_user = kwargs.get('_current_user')
+
+            user: UserInternal | None = current_user or _current_user
 
             if not user:
                 raise EnvironmentError('Current online user was not provided')
