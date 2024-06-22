@@ -39,3 +39,15 @@ async def list_users(
     )
 
     return [result.model_dump() for result in results]
+
+
+@router.get('/{user_id}')
+@with_permissions(roles=[UserRoleEnum.ADMIN, UserRoleEnum.USER])
+async def retrieve_user(
+    _current_user: GetCurrentUser,
+    user_id: str,
+    shared_user_service: GetSharedUserService,
+):
+    result = await shared_user_service.retrieve(user_id=user_id)
+
+    return result.model_dump()
