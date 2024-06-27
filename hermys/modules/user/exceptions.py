@@ -12,9 +12,9 @@ class UserNotFound(Exception):
 
 def bind_user_exceptions(app: FastAPI):
     @app.exception_handler(UserAlreadyExists)
-    def user_already_exists(
+    def user_already_exists(  # type: ignore
         _request: Request, _exc: UserAlreadyExists
-    ):   # type: ignore
+    ):
         return ORJSONResponse(
             status_code=status.HTTP_409_CONFLICT,
             content={

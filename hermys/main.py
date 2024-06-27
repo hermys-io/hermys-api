@@ -6,6 +6,8 @@ from scout_apm.async_.starlette import ScoutMiddleware  # type: ignore
 from hermys.db.dependencies import GetSharedDB
 from hermys.modules.auth.exceptions import bind_auth_exceptions
 from hermys.modules.auth.routes import router as auth_router
+from hermys.modules.organization.exceptions import bind_organization_exceptions
+from hermys.modules.organization.routes import router as organization_router
 from hermys.modules.user.exceptions import bind_user_exceptions
 from hermys.modules.user.routes import router as user_router
 from hermys.scount_apm.config import configure_scout_apm
@@ -48,6 +50,11 @@ app.include_router(
     tags=['auth'],
 )
 app.include_router(
+    router=organization_router,
+    prefix='/organizations',
+    tags=['organizations'],
+)
+app.include_router(
     router=user_router,
     prefix='/users',
     tags=['users'],
@@ -56,4 +63,5 @@ app.include_router(
 
 # Custom exceptions
 bind_auth_exceptions(app)
+bind_organization_exceptions(app)
 bind_user_exceptions(app)

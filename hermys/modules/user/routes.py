@@ -18,8 +18,8 @@ async def get_current_authenticated_user(current_user: GetCurrentUser):
 @with_permissions(roles=[UserRoleEnum.ADMIN])
 async def create_user(
     payload: UserCreatePayload,
-    _current_user: GetCurrentUser,
     shared_user_service: GetSharedUserService,
+    _current_user: GetCurrentUser,
 ):
     result = await shared_user_service.create(
         payload=payload,
@@ -31,8 +31,8 @@ async def create_user(
 @router.get('/')
 @with_permissions(roles=[UserRoleEnum.ADMIN])
 async def list_users(
-    current_user: GetCurrentUser,
     shared_user_service: GetSharedUserService,
+    current_user: GetCurrentUser,
 ):
     results = await shared_user_service.list(
         organization=current_user.organization,
@@ -44,9 +44,9 @@ async def list_users(
 @router.get('/{user_id}')
 @with_permissions(roles=[UserRoleEnum.ADMIN, UserRoleEnum.USER])
 async def retrieve_user(
-    _current_user: GetCurrentUser,
     user_id: str,
     shared_user_service: GetSharedUserService,
+    _current_user: GetCurrentUser,
 ):
     result = await shared_user_service.retrieve(user_id=user_id)
 
