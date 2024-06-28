@@ -5,7 +5,7 @@ import pytest
 from fastapi.testclient import TestClient
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase
 
-from hermys.db.dependencies import get_shared_db
+from hermys.db.shared_db import get_shared_db
 from hermys.main import app
 from hermys.modules.auth.service import AuthService
 from hermys.modules.user.enums import UserRoleEnum

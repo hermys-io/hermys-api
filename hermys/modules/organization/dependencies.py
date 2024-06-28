@@ -2,7 +2,7 @@ from typing import Annotated
 
 from fastapi import Depends
 
-from hermys.db.dependencies import GetSharedDB
+from hermys.db.shared_db import GetSharedDB
 from hermys.modules.organization.repository import OrganizationRepository
 from hermys.modules.organization.service import OrganizationService
 

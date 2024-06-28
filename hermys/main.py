@@ -3,9 +3,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import ORJSONResponse
 from scout_apm.async_.starlette import ScoutMiddleware  # type: ignore
 
-from hermys.db.dependencies import GetSharedDB
+from hermys.db.shared_db import GetSharedDB
 from hermys.modules.auth.exceptions import bind_auth_exceptions
 from hermys.modules.auth.routes import router as auth_router
+from hermys.modules.clerk.exceptions import bind_clerk_exceptions
+from hermys.modules.clerk.routes import router as clerk_router
 from hermys.modules.organization.exceptions import bind_organization_exceptions
 from hermys.modules.organization.routes import router as organization_router
 from hermys.modules.user.exceptions import bind_user_exceptions
@@ -59,9 +61,15 @@ app.include_router(
     prefix='/users',
     tags=['users'],
 )
+app.include_router(
+    router=clerk_router,
+    prefix='/clerk',
+    tags=['clerk'],
+)
 
 
 # Custom exceptions
 bind_auth_exceptions(app)
 bind_organization_exceptions(app)
 bind_user_exceptions(app)
+bind_clerk_exceptions(app)

@@ -8,13 +8,15 @@ packages = [{ include = "hermys_api" }]
 
 [tool.poetry.dependencies]
 python = "~3.11"
-hypercorn = { extras = ["trio"], version = "^0.17.3" }
+hypercorn = { extras = ["trio"], version = "0.17.3" }
 fastapi = "0.111.0"
 motor = "3.4.0"
 pydantic-settings = "2.3.3"
 python-jose = { extras = ["cryptography"], version = "3.3.0" }
 argon2-cffi = "23.1.0"
-scout-apm = "^3.1.0"
+scout-apm = "3.1.0"
+python-slugify = "8.0.4"
+b2sdk = "2.4.1"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "0.4.9"
