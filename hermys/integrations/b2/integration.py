@@ -6,25 +6,28 @@ from b2sdk.v2 import (  # type: ignore
 )
 from fastapi import UploadFile
 
+from hermys.settings import get_settings
 
-class B2Service:
+settings = get_settings()
+
+
+class B2Integration:
     def __init__(self) -> None:
         info = InMemoryAccountInfo()
         b2_api = B2Api(info, cache=AuthInfoCache(info))
-        application_key_id = '0052bc4a3ccc98c0000000001'
-        application_key = 'K005F++RHvp8RQAmp8I35LAl+cuheh0'
+        application_key_id = settings.B2_APPLICATION_KEY_ID
+        application_key = settings.B2_APPLICATION_KEY
         b2_api.authorize_account(
             'production',
             application_key_id,
             application_key,
         )
-        self.bucket = b2_api.get_bucket_by_name('hermys-dev')
+        self.bucket = b2_api.get_bucket_by_name(settings.B2_BUCKET_NAME)
 
-    def upload_file(self, file: UploadFile) -> str:
-        filename = f'folder/{file.filename}'
+    def upload_file(self, file: UploadFile, file_name: str) -> str:
         upload_source = UploadSourceBytes(data_bytes=file.file.read())
         uploaded_file = self.bucket.upload(
-            upload_source=upload_source, file_name=filename
+            upload_source=upload_source, file_name=file_name
         )
 
         return uploaded_file.file_name

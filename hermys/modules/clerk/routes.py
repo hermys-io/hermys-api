@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, UploadFile
 
 from hermys.modules.auth.dependencies import GetCurrentUser
 from hermys.modules.auth.permissions import with_permissions
@@ -17,5 +17,22 @@ async def create_clerk(
     _current_user: GetCurrentUser,
 ):
     result = await clerk_service.create(payload=payload)
+
+    return result.model_dump()
+
+
+@router.post('/{clerk_id}/update-photo')
+@with_permissions(roles=[UserRoleEnum.ADMIN])
+async def update_photo(
+    clerk_id: str,
+    photo: UploadFile,
+    clerk_service: GetClerkService,
+    current_user: GetCurrentUser,
+):
+    result = await clerk_service.update_photo(
+        current_user=current_user,
+        clerk_id=clerk_id,
+        photo=photo,
+    )
 
     return result.model_dump()

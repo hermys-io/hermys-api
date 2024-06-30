@@ -5,7 +5,11 @@ from motor.motor_asyncio import AsyncIOMotorDatabase
 from slugify import slugify
 
 from hermys.modules.clerk.exceptions import ClerkAlreadyExists, ClerkNotFound
-from hermys.modules.clerk.schemas import ClerkCreatePayload, ClerkRetrieve
+from hermys.modules.clerk.schemas import (
+    ClerkCreatePayload,
+    ClerkRetrieve,
+    ClerkUpdatePayload,
+)
 
 
 class ClerkRepository:
@@ -31,6 +35,14 @@ class ClerkRepository:
         result = await self.collection.insert_one(payload_dict)
         return await self.get_or_rise(by='_id', value=result.inserted_id)
 
+    async def update(self, *, clerk_id: ObjectId, payload: ClerkUpdatePayload):
+        payload_dict = payload.model_dump(exclude_none=True)
+        await self.collection.update_one(
+            {'_id': clerk_id}, {'$set': payload_dict}
+        )
+
+        return await self.get_or_rise(by='_id', value=clerk_id)
+
     async def get(
         self,
         *,
@@ -50,6 +62,6 @@ class ClerkRepository:
         result = await self.collection.find_one({by: value})
 
         if result:
-            return ClerkRetrieve.model_validate(obj=result)
+            return ClerkRetrieve.model_validate(result)
 
         raise ClerkNotFound()

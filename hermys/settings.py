@@ -21,6 +21,11 @@ class Settings(BaseSettings):
     # Scout APM
     SCOUT_KEY: str
 
+    # B2
+    B2_BUCKET_NAME: str
+    B2_APPLICATION_KEY_ID: str
+    B2_APPLICATION_KEY: str
+
 
 @cache
 def get_settings():

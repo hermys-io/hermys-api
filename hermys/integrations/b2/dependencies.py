@@ -2,11 +2,11 @@ from typing import Annotated
 
 from fastapi import Depends
 
-from hermys.integrations.b2.service import B2Service
+from hermys.integrations.b2.integration import B2Integration
 
 
-def get_b2_service():
-    return B2Service()
+def get_b2_integration():
+    return B2Integration()
 
 
-GetB2Service = Annotated[B2Service, Depends(get_b2_service)]
+GetB2Integration = Annotated[B2Integration, Depends(get_b2_integration)]
