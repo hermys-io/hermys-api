@@ -26,6 +26,11 @@ class Settings(BaseSettings):
     B2_APPLICATION_KEY_ID: str
     B2_APPLICATION_KEY: str
 
+    # Pinecone
+    PINECONE_API_KEY: str
+    PINECONE_CLOUD: str
+    PINECONE_REGION: str
+
 
 @cache
 def get_settings():

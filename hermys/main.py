@@ -4,6 +4,7 @@ from fastapi.responses import ORJSONResponse
 from scout_apm.async_.starlette import ScoutMiddleware  # type: ignore
 
 from hermys.db.shared_db import GetSharedDB
+from hermys.integrations.pinecone.dependencies import GetPineconeIntegration
 from hermys.modules.auth.exceptions import bind_auth_exceptions
 from hermys.modules.auth.routes import router as auth_router
 from hermys.modules.clerk.exceptions import bind_clerk_exceptions
@@ -43,6 +44,12 @@ async def health(db: GetSharedDB):
         db_status = 'down'
 
     return {'api': 'up', 'db': db_status}
+
+
+@app.get('/aaa', tags=['aaa'])
+async def aaa(pinecone_integration: GetPineconeIntegration):
+    pinecone_integration.delete_index(index_name='olamarilene')
+    return None
 
 
 # Routes
