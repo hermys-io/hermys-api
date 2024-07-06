@@ -3,12 +3,16 @@ from typing import Optional
 from pydantic import BaseModel, ConfigDict, Field
 
 from hermys.db.base import ObjectIdField
+from hermys.modules.clerk.enums import OpenAiGPTModelEnum
 
 
 class ClerkBase(BaseModel):
     name: str = Field(default=...)
     description: Optional[str] = Field(default=...)
     prompt: str = Field(default=...)
+    gpt_model: OpenAiGPTModelEnum = Field(
+        default=OpenAiGPTModelEnum.GOT_35_TURBO,
+    )
 
 
 class ClerkCreatePayload(ClerkBase):
