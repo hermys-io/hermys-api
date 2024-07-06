@@ -10,6 +10,8 @@ from hermys.modules.clerk.exceptions import bind_clerk_exceptions
 from hermys.modules.clerk.routes import router as clerk_router
 from hermys.modules.organization.exceptions import bind_organization_exceptions
 from hermys.modules.organization.routes import router as organization_router
+from hermys.modules.suggestions.exceptions import bind_suggestion_exceptions
+from hermys.modules.suggestions.routes import router as suggestion_router
 from hermys.modules.user.exceptions import bind_user_exceptions
 from hermys.modules.user.routes import router as user_router
 from hermys.scount_apm.config import configure_scout_apm
@@ -24,7 +26,7 @@ app = FastAPI(
 )
 
 # Middlewares
-app.add_middleware(ScoutMiddleware)
+app.add_middleware(ScoutMiddleware)  # type: ignore
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.ALLOWED_ORIGINS.split(','),
@@ -63,8 +65,13 @@ app.include_router(
 )
 app.include_router(
     router=clerk_router,
-    prefix='/clerk',
-    tags=['clerk'],
+    prefix='/clerks',
+    tags=['clerks'],
+)
+app.include_router(
+    router=suggestion_router,
+    prefix='/suggestions',
+    tags=['suggestions'],
 )
 
 
@@ -73,3 +80,4 @@ bind_auth_exceptions(app)
 bind_organization_exceptions(app)
 bind_user_exceptions(app)
 bind_clerk_exceptions(app)
+bind_suggestion_exceptions(app)
