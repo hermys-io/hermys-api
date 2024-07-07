@@ -8,6 +8,8 @@ from hermys.modules.auth.exceptions import bind_auth_exceptions
 from hermys.modules.auth.routes import router as auth_router
 from hermys.modules.clerk.exceptions import bind_clerk_exceptions
 from hermys.modules.clerk.routes import router as clerk_router
+from hermys.modules.knowledge.exceptions import bind_knowledge_exceptions
+from hermys.modules.knowledge.routes import router as knowledge_router
 from hermys.modules.organization.exceptions import bind_organization_exceptions
 from hermys.modules.organization.routes import router as organization_router
 from hermys.modules.suggestions.exceptions import bind_suggestion_exceptions
@@ -55,23 +57,28 @@ app.include_router(
 )
 app.include_router(
     router=organization_router,
-    prefix='/organizations',
-    tags=['organizations'],
+    prefix='/organization',
+    tags=['organization'],
 )
 app.include_router(
     router=user_router,
-    prefix='/users',
-    tags=['users'],
+    prefix='/user',
+    tags=['user'],
 )
 app.include_router(
     router=clerk_router,
-    prefix='/clerks',
-    tags=['clerks'],
+    prefix='/clerk',
+    tags=['clerk'],
+)
+app.include_router(
+    router=knowledge_router,
+    prefix='/knowledge',
+    tags=['knowledge'],
 )
 app.include_router(
     router=suggestion_router,
-    prefix='/suggestions',
-    tags=['suggestions'],
+    prefix='/suggestion',
+    tags=['suggestion'],
 )
 
 
@@ -81,3 +88,4 @@ bind_organization_exceptions(app)
 bind_user_exceptions(app)
 bind_clerk_exceptions(app)
 bind_suggestion_exceptions(app)
+bind_knowledge_exceptions(app)
