@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import BaseModel, Field
 
 from hermys.db.base import ObjectIdField
@@ -7,6 +9,7 @@ class KnowledgeBase(BaseModel):
     name: str = Field(default=...)
     alt_text: str = Field(default=...)
     clerk: ObjectIdField = Field(default=...)
+    active: bool = Field(default=...)
     chunk_size: int = Field(default=500)
     chunk_overlap: int = Field(default=200)
     top_k: int = Field(default=5)
@@ -17,4 +20,5 @@ class KnowledgeCreatePayload(KnowledgeBase):
 
 
 class KnowledgeRetrieve(KnowledgeBase):
-    pass
+    id: ObjectIdField = Field(default=..., alias='_id')
+    photo: Optional[str] = Field(default=None)

@@ -10,6 +10,9 @@ from hermys.modules.auth.routes import router as auth_router
 from hermys.modules.clerk.exceptions import bind_clerk_exceptions
 from hermys.modules.clerk.routes import router as clerk_router
 from hermys.modules.knowledge.exceptions import bind_knowledge_exceptions
+from hermys.modules.knowledge.host_routes import (
+    router as host_knowledge_router,
+)
 from hermys.modules.knowledge.routes import router as knowledge_router
 from hermys.modules.organization.exceptions import bind_organization_exceptions
 from hermys.modules.organization.routes import router as organization_router
@@ -26,6 +29,8 @@ app = FastAPI(
     title='Hermys API',
     default_response_class=ORJSONResponse,
 )
+
+print(settings.ALLOWED_ORIGINS.split(','))
 
 # Middlewares
 app.add_middleware(ScoutMiddleware)  # type: ignore
@@ -79,6 +84,11 @@ app.include_router(
     router=suggestion_router,
     prefix='/suggestion',
     tags=['suggestion'],
+)
+app.include_router(
+    router=host_knowledge_router,
+    prefix='/host-knowledge',
+    tags=['host-knowledge'],
 )
 
 

@@ -26,6 +26,14 @@ class KnowledgeRepository:
         result = await self.collection.insert_one(payload_dict)
         return await self.get_or_rise(by='_id', value=result.inserted_id)
 
+    async def list(self, *, clerk_id: ObjectId):
+        default_filter = {
+            'clerk': clerk_id,
+            'active': True,
+        }
+        results = await self.collection.find(default_filter).to_list(None)
+        return [KnowledgeRetrieve.model_validate(result) for result in results]
+
     async def get(
         self,
         *,
