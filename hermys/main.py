@@ -4,6 +4,7 @@ from fastapi.responses import ORJSONResponse
 from scout_apm.async_.starlette import ScoutMiddleware  # type: ignore
 
 from hermys.db.shared_db import GetSharedDB
+from hermys.integrations.scount_apm.config import configure_scout_apm
 from hermys.modules.auth.exceptions import bind_auth_exceptions
 from hermys.modules.auth.routes import router as auth_router
 from hermys.modules.clerk.exceptions import bind_clerk_exceptions
@@ -16,7 +17,6 @@ from hermys.modules.suggestions.exceptions import bind_suggestion_exceptions
 from hermys.modules.suggestions.routes import router as suggestion_router
 from hermys.modules.user.exceptions import bind_user_exceptions
 from hermys.modules.user.routes import router as user_router
-from hermys.scount_apm.config import configure_scout_apm
 from hermys.settings import get_settings
 
 settings = get_settings()

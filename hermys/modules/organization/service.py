@@ -1,4 +1,6 @@
-from typing import List
+from typing import List, Union
+
+from bson import ObjectId
 
 from hermys.modules.organization.repository import OrganizationRepository
 from hermys.modules.organization.schemas import (
@@ -24,3 +26,11 @@ class OrganizationService:
     async def list(self) -> List[OrganizationRetrieve]:
         results = await self.organization_repo.list()
         return results
+
+    async def retrieve_or_rise(
+        self,
+        by: str,
+        value: Union[str, ObjectId],
+    ) -> OrganizationRetrieve:
+        result = await self.organization_repo.get_or_rise(by=by, value=value)
+        return result

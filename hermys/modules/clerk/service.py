@@ -2,6 +2,7 @@ from bson import ObjectId
 from bson.errors import InvalidId
 from fastapi import UploadFile
 
+from hermys.common.b2_helpers import get_clerk_filename
 from hermys.integrations.b2.integration import B2Integration
 from hermys.modules.clerk.exceptions import ClerkNotFound
 from hermys.modules.clerk.repository import ClerkRepository
@@ -10,7 +11,6 @@ from hermys.modules.clerk.schemas import (
     ClerkRetrieve,
     ClerkUpdatePayload,
 )
-from hermys.modules.common.b2_helpers import get_clerk_filename
 from hermys.modules.user.schemas import UserInternal
 
 
