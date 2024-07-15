@@ -95,17 +95,6 @@ async def train(
     await rag.train()
 
 
-# class History(BaseModel):
-#     type:
-#     data:
-# class ChatHistory(BaseModel):
-#     id: ObjectIdField = Field(default=..., alias='_id')
-#     session_id: str = Field(default=..., alias='SessionId')
-#     history: History = Field(default=...)
-
-#     model_config = ConfigDict(populate_by_name=True)
-
-
 @router.get('/chat-history', status_code=200)
 async def chat_history(  # type: ignore
     host_db: GetHostDB,

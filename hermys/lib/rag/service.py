@@ -1,3 +1,5 @@
+import os
+
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain.chains.history_aware_retriever import (
     create_history_aware_retriever,
@@ -20,6 +22,9 @@ from hermys.modules.organization.schemas import OrganizationRetrieve
 from hermys.settings import get_settings
 
 settings = get_settings()
+
+os.environ['LANGCHAIN_TRACING_V2'] = 'true'
+os.environ['LANGCHAIN_PROJECT'] = 'hermys'
 
 
 class RAGService:
