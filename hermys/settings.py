@@ -31,6 +31,9 @@ class Settings(BaseSettings):
     PINECONE_CLOUD: str
     PINECONE_REGION: str
 
+    # OpenAI
+    OPENAI_API_KEY: str
+
 
 @cache
 def get_settings():

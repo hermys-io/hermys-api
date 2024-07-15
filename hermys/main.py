@@ -30,7 +30,6 @@ app = FastAPI(
     default_response_class=ORJSONResponse,
 )
 
-print(settings.ALLOWED_ORIGINS.split(','))
 
 # Middlewares
 app.add_middleware(ScoutMiddleware)  # type: ignore

@@ -6,6 +6,7 @@ from hermys.db.base import ObjectIdField
 
 
 class KnowledgeBase(BaseModel):
+    pdf_url: str = Field(default=...)
     name: str = Field(default=...)
     alt_text: str = Field(default=...)
     clerk: ObjectIdField = Field(default=...)
