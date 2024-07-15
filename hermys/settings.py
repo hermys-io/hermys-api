@@ -34,6 +34,9 @@ class Settings(BaseSettings):
     # OpenAI
     OPENAI_API_KEY: str
 
+    # LangChain
+    LANGCHAIN_API_KEY: str
+
 
 @cache
 def get_settings():
