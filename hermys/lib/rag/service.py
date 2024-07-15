@@ -96,7 +96,10 @@ class RAGService:
 
         Se a pergunta for sobre endereço, localização ou turno da prova, \
         informe que o local aparecerá no cartão de inscrição dentro do \
-        período estabelecido no cronograma do edital.
+        período estabelecido no cronograma do edital.\
+
+        Se a pergunta for sobre datas, informe ao candidato para confirmar \
+        no cronograma presente no site\
 
         CONTEXTO: \
         {context}"""
