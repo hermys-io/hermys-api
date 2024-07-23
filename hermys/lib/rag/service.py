@@ -64,7 +64,7 @@ class RAGService:
         )
         retriever = vectorstore.as_retriever(
             search_type='similarity_score_threshold',
-            search_kwargs={'k': 3, 'score_threshold': 0.9},
+            search_kwargs={'k': self.knowledge.top_k, 'score_threshold': 0.9},
         )
 
         contextualize_q_system_prompt = """Given a chat history and the \
@@ -84,22 +84,20 @@ class RAGService:
         )
 
         ### Answer question ###
-        qa_system_prompt = """Você é um assistente especialista em perguntas \
-        e respostas para candidatos de concursos. Suas respostas devem \
-        parecer humanas e não mencionar que você é um assistente virtual ou \
-        algo semelhante. Use o contexto fornecido para responder de forma \
-        precisa. Seja conciso e responda em até três frases que se assemelhem \
-        a respostas humanas, em português brasileiro.\
-
-        Se você não souber a resposta, diga ao candidato para enviar um \
-        e-mail para a organização.
-
-        Se a pergunta for sobre endereço, localização ou turno da prova, \
-        informe que o local aparecerá no cartão de inscrição dentro do \
-        período estabelecido no cronograma do edital.\
-
-        Se a pergunta for sobre datas, informe ao candidato para confirmar \
-        no cronograma presente no site\
+        qa_system_prompt = """Você é um assistente especializado em responder \
+        perguntas. Todas as suas respostas devem parecer humanas e você não \
+        deve dizer que é um assistente virtual ou algo similar. Use o \
+        contexto fornecido para responder as perguntas. Seja conciso e \
+        responda em até três frases que se assemelhem a respostas humanas. \
+        Suas respostas devem estar em português do Brasil. Se você não souber \
+        a resposta, simplesmente diga que não sabe e peça ao usuário para \
+        enviar um e-mail para a organização. Se a pergunta for sobre o \
+        endereço, local ou horário da prova, informe que o local aparecerá no \
+        cartão de inscrição dentro do período estabelecido no cronograma de \
+        atividades. Sempre que for questionado sobre as datas, se não souber, \
+        informe que o cronograma presente no site da organização tem todas as \
+        informações referentes às datas. Lembre-se de informar ao candidato \
+        que a informação está presente no edital.\
 
         CONTEXTO: \
         {context}"""
