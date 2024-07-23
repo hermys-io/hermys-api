@@ -24,7 +24,6 @@ from hermys.settings import get_settings
 settings = get_settings()
 
 os.environ['LANGCHAIN_TRACING_V2'] = 'true'
-os.environ['LANGCHAIN_PROJECT'] = 'hermys'
 os.environ['LANGCHAIN_API_KEY'] = settings.LANGCHAIN_API_KEY
 
 
@@ -36,6 +35,7 @@ class RAGService:
         clerk: ClerkRetrieve,
         organization: OrganizationRetrieve,
     ):
+        os.environ['LANGCHAIN_PROJECT'] = organization.name
         self.knowledge = knowledge
         self.clerk = clerk
         self.organization = organization
