@@ -11,7 +11,7 @@ class ClerkBase(BaseModel):
     description: Optional[str] = Field(default=...)
     prompt: str = Field(default=...)
     gpt_model: OpenAiGPTModelEnum = Field(
-        default=OpenAiGPTModelEnum.GOT_35_TURBO,
+        default=OpenAiGPTModelEnum.GPT_4o_MINI,
     )
 
 
