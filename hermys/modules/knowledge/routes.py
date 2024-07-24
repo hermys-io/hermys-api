@@ -27,7 +27,7 @@ async def create_knowledge(
 
 @router.post('/{knowledge_id}/add-photo')
 @with_permissions(roles=[UserRoleEnum.ADMIN])
-async def add_photo(
+async def add_knowledge_photo(
     knowledge_id: ObjectIdField,
     photo: UploadFile,
     knowledge_add_photo_service: GetKnowledgeAddPhotoService,
