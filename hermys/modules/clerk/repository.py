@@ -31,6 +31,7 @@ class ClerkRepository:
         payload_dict = payload.model_dump()
         payload_dict['active'] = True
         payload_dict['slug'] = slug
+        payload_dict['photo'] = None
 
         result = await self.collection.insert_one(payload_dict)
         return await self.get_or_rise(by='_id', value=result.inserted_id)
