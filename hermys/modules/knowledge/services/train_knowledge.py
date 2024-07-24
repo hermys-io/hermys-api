@@ -17,7 +17,7 @@ from hermys.settings import get_settings
 settings = get_settings()
 
 
-class TrainKnowledgeService:
+class KnowledgeTrainService:
     def __init__(self, knowledge_repo: KnowledgeRepository) -> None:
         self.knowledge_repo = knowledge_repo
         self.embeddings = OpenAIEmbeddings(
@@ -110,11 +110,11 @@ class TrainKnowledgeService:
         vectorstore.add_documents(splits)
 
 
-def get_train_knowledge_service(knowledge_repo: GetKnowledgeRepository):
-    return TrainKnowledgeService(knowledge_repo=knowledge_repo)
+def get_knowledge_train_service(knowledge_repo: GetKnowledgeRepository):
+    return KnowledgeTrainService(knowledge_repo=knowledge_repo)
 
 
-GetTrainKnowledgeService = Annotated[
-    TrainKnowledgeService,
-    Depends(get_train_knowledge_service),
+GetKnowledgeTrainService = Annotated[
+    KnowledgeTrainService,
+    Depends(get_knowledge_train_service),
 ]

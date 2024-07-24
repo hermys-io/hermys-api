@@ -23,3 +23,7 @@ class KnowledgeCreatePayload(KnowledgeBase):
 class KnowledgeRetrieve(KnowledgeBase):
     id: ObjectIdField = Field(default=..., alias='_id')
     photo: Optional[str] = Field(default=None)
+
+
+class KnowledgeUpdatePayload(BaseModel):
+    photo: Optional[str] = Field(default=...)

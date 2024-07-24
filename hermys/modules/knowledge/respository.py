@@ -7,6 +7,7 @@ from hermys.modules.knowledge.exceptions import KnowledgeNotFound
 from hermys.modules.knowledge.schemas import (
     KnowledgeCreatePayload,
     KnowledgeRetrieve,
+    KnowledgeUpdatePayload,
 )
 
 
@@ -25,6 +26,19 @@ class KnowledgeRepository:
 
         result = await self.collection.insert_one(payload_dict)
         return await self.get_or_rise(by='_id', value=result.inserted_id)
+
+    async def update(
+        self,
+        *,
+        clerk_id: ObjectId,
+        payload: KnowledgeUpdatePayload,
+    ) -> KnowledgeRetrieve:
+        payload_dict = payload.model_dump(exclude_none=True)
+        await self.collection.update_one(
+            {'_id': clerk_id}, {'$set': payload_dict}
+        )
+
+        return await self.get_or_rise(by='_id', value=clerk_id)
 
     async def list(self, *, clerk_id: ObjectId):
         default_filter = {
