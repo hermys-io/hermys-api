@@ -25,6 +25,18 @@ async def list_knowledge(
     return [result.model_dump() for result in results]
 
 
+@router.get('/clerk', status_code=200)
+async def get_clerk(
+    clerk_slug: str,
+    host_db: GetHostDB,
+):
+    clerk_repo = ClerkRepository(db=host_db)
+
+    clerk = await clerk_repo.get_or_rise(by='slug', value=clerk_slug)
+
+    return clerk.model_dump()
+
+
 @router.get('/ask', status_code=200)
 async def ask(
     db: GetSharedDB,
@@ -60,39 +72,6 @@ async def ask(
     response = rag.invoke(quiestion=question, session_id=session_id)
 
     return response
-
-
-@router.post('/train', status_code=200)
-async def train(
-    db: GetSharedDB,
-    host_db: GetHostDB,
-    host_name: GetHostName,
-    knowledge_id: str,
-):
-    organization_repo = OrganizationRepository(db=db)
-    knowledge_repo = KnowledgeRepository(db=host_db)
-    clerk_repo = ClerkRepository(db=host_db)
-
-    organization = await organization_repo.get_or_rise(
-        by='host',
-        value=host_name,
-    )
-    knowledge = await knowledge_repo.get_or_rise(
-        by='_id',
-        value=ObjectId(knowledge_id),
-    )
-    clerk = await clerk_repo.get_or_rise(
-        by='_id',
-        value=knowledge.clerk,
-    )
-
-    rag = RAGService(
-        organization=organization,
-        clerk=clerk,
-        knowledge=knowledge,
-    )
-
-    await rag.train()
 
 
 @router.get('/chat-history', status_code=200)
