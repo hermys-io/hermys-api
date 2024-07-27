@@ -1,9 +1,10 @@
-from typing import Annotated
+from typing import Annotated, List
 
 from bson import ObjectId
 from fastapi import Depends
 from langchain.pydantic_v1 import SecretStr
 from langchain_community.document_loaders import PyPDFLoader
+from langchain_core.documents import Document
 from langchain_openai import OpenAIEmbeddings
 from langchain_pinecone import PineconeVectorStore
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -93,13 +94,25 @@ class KnowledgeTrainService:
         index_name: str,
     ):
         loader = PyPDFLoader(file_path=knowledge.pdf_url)
+        import re
 
-        docs = loader.load()
+        def clean_text(text: str):
+            text = re.sub(r'(?<!\n)\n(?!\n[A-Z])', ' ', text)
+            text = re.sub(r'\s+', ' ', text)
+            return text.strip()
+
+        documents = loader.load()
+        cleaned_documents: List[Document] = []
+        for doc in documents:
+            cleaned_text = clean_text(doc.page_content)
+            doc.page_content = cleaned_text
+            cleaned_documents.append(doc)
+
         text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=knowledge.chunk_size,
             chunk_overlap=knowledge.chunk_overlap,
         )
-        splits = text_splitter.split_documents(docs)
+        splits = text_splitter.split_documents(cleaned_documents)
 
         vectorstore = PineconeVectorStore(
             pinecone_api_key=settings.PINECONE_API_KEY,
