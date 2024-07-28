@@ -6,15 +6,13 @@ from langchain.chains.history_aware_retriever import (
 )
 from langchain.chains.retrieval import create_retrieval_chain
 from langchain.pydantic_v1 import SecretStr
-from langchain_community.document_loaders import PyPDFLoader
 from langchain_core.chat_history import BaseChatMessageHistory
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.runnables.history import RunnableWithMessageHistory
 from langchain_mongodb import MongoDBChatMessageHistory
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_pinecone import PineconeVectorStore
-from langchain_text_splitters import RecursiveCharacterTextSplitter
-from pinecone import Pinecone, ServerlessSpec  # type: ignore
+from pinecone import Pinecone  # type: ignore
 
 from hermys.modules.clerk.schemas import ClerkRetrieve
 from hermys.modules.knowledge.schemas import KnowledgeRetrieve
@@ -84,26 +82,11 @@ class RAGService:
         )
 
         ### Answer question ###
-        qa_system_prompt = """Você é um assistente especializado em responder \
-        perguntas. Todas as suas respostas devem parecer humanas e você não \
-        deve dizer que é um assistente virtual ou algo similar. Use o \
-        contexto fornecido para responder à pergunta. Seja conciso e responda \
-        em até três frases que se assemelhem a respostas humanas. Suas \
-        respostas devem estar em português do Brasil. Se você não souber a \
-        resposta, simplesmente diga que não sabe e peça ao usuário para \
-        enviar um e-mail para a organização. Se a pergunta for sobre o \
-        endereço, local ou horário da prova, informe que o local aparecerá no \
-        cartão de inscrição dentro do período estabelecido no cronograma de \
-        atividades. Sempre que for questionado sobre as datas, se não souber, \
-        informe que o cronograma presente no site da organização tem todas as \
-        informações referentes às datas. Lembre-se de informar ao candidato \
-        que a informação está presente no edital. Caso perguntem se é \
-        necessário residir no local para algum cargo, informe que apenas para \
-        o cargo de Agente Comunitário de Saúde (ACS) o candidato deve residir \
-        na área da comunidade em que atuará.\
+        qa_system_prompt = self._get_prompt(
+            clerk=self.clerk,
+            knowledge=self.knowledge,
+        )
 
-        CONTEXTO: \
-        {context}"""
         qa_prompt = ChatPromptTemplate.from_messages(
             [
                 ('system', qa_system_prompt),
@@ -134,26 +117,6 @@ class RAGService:
 
         return result
 
-    async def train(self):
-        loader = PyPDFLoader(file_path=self.knowledge.pdf_url)
-
-        docs = loader.load()
-        text_splitter = RecursiveCharacterTextSplitter(
-            chunk_size=self.knowledge.chunk_size,
-            chunk_overlap=self.knowledge.chunk_overlap,
-        )
-        splits = text_splitter.split_documents(docs)
-
-        self._pinecone_configure_index()
-
-        vectorstore = PineconeVectorStore(
-            pinecone_api_key=settings.PINECONE_API_KEY,
-            index_name=self.index_name,
-            namespace=self.namespace,
-            embedding=self.embeddings,
-        )
-        vectorstore.add_documents(splits)
-
     def _get_session_history(self, session_id: str) -> BaseChatMessageHistory:
         return MongoDBChatMessageHistory(
             connection_string=settings.MONGODB_URI,
@@ -162,16 +125,14 @@ class RAGService:
             session_id=f'{str(self.knowledge.id)}:{session_id}',
         )
 
-    def _pinecone_configure_index(self):
-        spec = ServerlessSpec(
-            cloud=settings.PINECONE_CLOUD,
-            region=settings.PINECONE_REGION,
+    def _get_prompt(
+        self,
+        *,
+        clerk: ClerkRetrieve,
+        knowledge: KnowledgeRetrieve,
+    ):
+        prompt = clerk.prompt.format(
+            KNOWLEDGE=knowledge.prompt_copmlement,
+            CONTEXT='{context}',
         )
-
-        if self.index_name not in self.pinecone.list_indexes().names():
-            self.pinecone.create_index(
-                name=self.index_name,
-                dimension=1536,
-                spec=spec,
-                metric='cosine',
-            )
+        return prompt
