@@ -29,4 +29,4 @@ class ClerkRetrieve(ClerkBase):
 
 
 class ClerkUpdatePayload(BaseModel):
-    photo: Optional[str] = Field(default=...)
+    photo: Optional[str] = Field(default=None)

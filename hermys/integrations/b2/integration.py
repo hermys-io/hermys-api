@@ -32,11 +32,11 @@ class B2Integration:
 
         return uploaded_file.file_name
 
-    def get_file(self, filename: str) -> str:
+    def get_file(self, filename: str, valid_duration_in_seconds: int) -> str:
         url = self.bucket.get_download_url(filename=filename)
         authorization = self.bucket.get_download_authorization(
             file_name_prefix=filename,
-            valid_duration_in_seconds=600,
+            valid_duration_in_seconds=valid_duration_in_seconds,
         )
 
         return f'{url}?Authorization={authorization}'

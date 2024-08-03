@@ -9,6 +9,7 @@ from hermys.modules.auth.exceptions import bind_auth_exceptions
 from hermys.modules.auth.routes import router as auth_router
 from hermys.modules.clerk.exceptions import bind_clerk_exceptions
 from hermys.modules.clerk.routes import router as clerk_router
+from hermys.modules.helpers.routes import router as helpers_router
 from hermys.modules.knowledge.exceptions import bind_knowledge_exceptions
 from hermys.modules.knowledge.host_routes import (
     router as host_knowledge_router,
@@ -84,6 +85,13 @@ app.include_router(
     prefix='/suggestion',
     tags=['suggestion'],
 )
+app.include_router(
+    router=helpers_router,
+    prefix='/helpers',
+    tags=['helpers'],
+)
+
+# Host Knowledge routes
 app.include_router(
     router=host_knowledge_router,
     prefix='/host-knowledge',
