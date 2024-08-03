@@ -6,6 +6,7 @@ from fastapi import APIRouter
 from hermys.common.host_name_dependencies import GetHostName
 from hermys.db.host_db import GetHostDB
 from hermys.db.shared_db import GetSharedDB
+from hermys.integrations.b2.dependencies import GetB2Integration
 from hermys.lib.rag.service import RAGService
 from hermys.modules.clerk.repository import ClerkRepository
 from hermys.modules.knowledge.dependencies import GetHostKnowledgeService
@@ -110,3 +111,17 @@ async def chat_history(  # type: ignore
     }
 
     return response
+
+
+@router.get('/get-signed-file')
+async def get_signed_file(
+    b2_integration: GetB2Integration,
+    filename: str,
+    _host_db: GetHostDB,
+    valid_duration_in_seconds: int = 3600,
+):
+    result = b2_integration.get_file(
+        filename=filename,
+        valid_duration_in_seconds=valid_duration_in_seconds,
+    )
+    return result

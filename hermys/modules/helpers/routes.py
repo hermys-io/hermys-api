@@ -8,9 +8,9 @@ from hermys.modules.user.enums import UserRoleEnum
 router = APIRouter()
 
 
-@router.get('/get-signed-image')
+@router.get('/get-signed-file')
 @with_permissions(roles=[UserRoleEnum.ADMIN])
-async def get_signed_image(
+async def get_signed_file(
     b2_integration: GetB2Integration,
     filename: str,
     _current_user: GetCurrentUser,
