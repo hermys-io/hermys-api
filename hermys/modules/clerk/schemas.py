@@ -13,6 +13,7 @@ class ClerkBase(BaseModel):
     gpt_model: OpenAiGPTModelEnum = Field(
         default=OpenAiGPTModelEnum.GPT_4o_MINI,
     )
+    chat_title: str = Field(default=...)
 
 
 class ClerkCreatePayload(ClerkBase):
