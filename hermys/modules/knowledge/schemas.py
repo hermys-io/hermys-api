@@ -27,4 +27,4 @@ class KnowledgeRetrieve(KnowledgeBase):
 
 
 class KnowledgeUpdatePayload(BaseModel):
-    photo: Optional[str] = Field(default=...)
+    photo: Optional[str] = Field(default=None)

@@ -1,8 +1,16 @@
+from typing import Literal
+
 from hermys.integrations.b2.integration import B2Integration
 
 
-def get_clerk_filename(*, organization: str, clerk_id: str, photo_name: str):
-    path = f'{organization}/clerk/{clerk_id}'
+def get_clerk_filename(
+    *,
+    organization: str,
+    clerk_id: str,
+    photo_name: str,
+    _type: Literal['light', 'dark'],
+):
+    path = f'{organization}/clerk/{clerk_id}-{_type}'
     file_name = 'photo'
     file_extension = photo_name.split('.')[-1]
 

@@ -1,3 +1,5 @@
+from typing import Literal
+
 from fastapi import APIRouter, UploadFile
 
 from hermys.modules.auth.dependencies import GetCurrentUser
@@ -28,11 +30,13 @@ async def update_photo(
     photo: UploadFile,
     clerk_service: GetClerkService,
     current_user: GetCurrentUser,
+    _type: Literal['light', 'dark'] = 'light',
 ):
     result = await clerk_service.update_photo(
         current_user=current_user,
         clerk_id=clerk_id,
         photo=photo,
+        _type=_type,
     )
 
     return result.model_dump()

@@ -23,10 +23,12 @@ class ClerkRetrieve(ClerkBase):
     id: ObjectIdField = Field(default=..., alias='_id')
     active: bool = Field(default=...)
     slug: str = Field(default=...)
-    photo: Optional[str] = Field(default=None)
+    photo_light: Optional[str] = Field(default=None)
+    photo_dark: Optional[str] = Field(default=None)
 
     model_config = ConfigDict(populate_by_name=True)
 
 
 class ClerkUpdatePayload(BaseModel):
-    photo: Optional[str] = Field(default=None)
+    photo_light: Optional[str] = Field(default=None)
+    photo_dark: Optional[str] = Field(default=None)

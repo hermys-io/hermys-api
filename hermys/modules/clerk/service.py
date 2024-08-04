@@ -1,3 +1,5 @@
+from typing import Literal
+
 from bson import ObjectId
 from bson.errors import InvalidId
 from fastapi import UploadFile
@@ -39,6 +41,7 @@ class ClerkService:
         current_user: UserInternal,
         clerk_id: str,
         photo: UploadFile,
+        _type: Literal['light', 'dark'],
     ) -> ClerkRetrieve:
         try:
             clerk_object_id = ObjectId(clerk_id)
@@ -57,11 +60,16 @@ class ClerkService:
             organization=current_user.organization,
             clerk_id=clerk_id,
             photo_name=photo.filename,
+            _type=_type,
         )
 
         self.b2_integration.upload_file(photo, file_name=file_name)
 
-        payload = ClerkUpdatePayload(photo=file_name)
+        if _type == 'light':
+            payload = ClerkUpdatePayload(photo_light=file_name)
+        else:
+            payload = ClerkUpdatePayload(photo_dark=file_name)
+
         result = await self.clerk_repo.update(
             clerk_id=ObjectId(clerk.id),
             payload=payload,
