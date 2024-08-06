@@ -99,7 +99,10 @@ async def chat_history(  # type: ignore
             {
                 'SessionId': f'{str(knowledge.id)}:{session_id}',
                 'History': json.dumps(
-                    {'type': 'ai', 'data': {knowledge.welcome_message}}
+                    {
+                        'type': 'ai',
+                        'data': {'content': knowledge.welcome_message},
+                    }
                 ),
             }
         )
