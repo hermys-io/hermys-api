@@ -15,6 +15,7 @@ class KnowledgeBase(BaseModel):
     chunk_overlap: int = Field(default=200)
     top_k: int = Field(default=5)
     prompt_copmlement: str = Field(default='')
+    welcome_message: str = Field(default='')
 
 
 class KnowledgeCreatePayload(KnowledgeBase):

@@ -94,6 +94,17 @@ async def chat_history(  # type: ignore
         await host_db['chat-history'].find({'SessionId': _filter}).to_list(30)
     )
 
+    if len(history) == 0:  # type: ignore
+        welcome_message = await host_db['chat-history'].insert_one(
+            {
+                'SessionId': f'{str(knowledge.id)}:{session_id}',
+                'History': json.dumps(
+                    {'type': 'ai', 'data': {knowledge.welcome_message}}
+                ),
+            }
+        )
+        history.append(welcome_message)
+
     def parse(item):  # type: ignore
         history = json.loads(item['History'])  # type: ignore
         return {
