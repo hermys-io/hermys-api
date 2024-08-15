@@ -8,6 +8,9 @@ class Settings(BaseSettings):
         env_file='.env', env_file_encoding='utf-8'
     )
 
+    # Environment
+    ENVIRONMENT: str = 'local'
+
     # Mongo
     MONGODB_URI: str
 
@@ -36,6 +39,9 @@ class Settings(BaseSettings):
 
     # LangChain
     LANGCHAIN_API_KEY: str
+
+    # Sentry
+    SENTRY_DNS: str
 
 
 @cache

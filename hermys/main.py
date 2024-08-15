@@ -5,6 +5,7 @@ from scout_apm.async_.starlette import ScoutMiddleware  # type: ignore
 
 from hermys.db.shared_db import GetSharedDB
 from hermys.integrations.scount_apm.config import configure_scout_apm
+from hermys.integrations.sentry.config import configure_sentry
 from hermys.modules.auth.exceptions import bind_auth_exceptions
 from hermys.modules.auth.routes import router as auth_router
 from hermys.modules.clerk.exceptions import bind_clerk_exceptions
@@ -24,7 +25,11 @@ from hermys.modules.user.routes import router as user_router
 from hermys.settings import get_settings
 
 settings = get_settings()
+
+
 configure_scout_apm()
+configure_sentry()
+
 
 app = FastAPI(
     title='Hermys API',

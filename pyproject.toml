@@ -23,6 +23,7 @@ langchain-openai = "^0.1.16"
 langchain-pinecone = "^0.1.1"
 pypdf = "^4.3.0"
 langchain-mongodb = "^0.1.6"
+sentry-sdk = {extras = ["fastapi"], version = "^2.13.0"}
 
 [tool.poetry.group.dev.dependencies]
 ruff = "0.4.9"
