@@ -5,8 +5,8 @@ from hermys.db.base import ObjectIdField
 
 class SuggestionBase(BaseModel):
     text: str = Field(default=...)
-    source: ObjectIdField = Field(default=...)
     active: bool = Field(default=True)
+    knowledge_id: ObjectIdField = Field(default=...)
 
 
 class SuggestionCreatePayload(SuggestionBase):

@@ -12,6 +12,10 @@ from hermys.modules.clerk.repository import ClerkRepository
 from hermys.modules.knowledge.dependencies import GetHostKnowledgeService
 from hermys.modules.knowledge.respository import KnowledgeRepository
 from hermys.modules.organization.repository import OrganizationRepository
+from hermys.modules.suggestions.repository import SuggestionRepository
+from hermys.modules.suggestions.services.list_suggestions import (
+    ListSuggestionService,
+)
 
 router = APIRouter()
 
@@ -82,6 +86,11 @@ async def chat_history(  # type: ignore
     session_id: str,
 ):
     knowledge_repo = KnowledgeRepository(db=host_db)
+    suggestion_repo = SuggestionRepository(db=host_db)
+
+    list_sugestions_service = ListSuggestionService(
+        suggestion_repo=suggestion_repo
+    )
 
     knowledge = await knowledge_repo.get_or_rise(
         by='_id',
@@ -95,7 +104,7 @@ async def chat_history(  # type: ignore
     )
 
     if len(history) == 0:  # type: ignore
-        welcome_message = await host_db['chat-history'].insert_one(
+        await host_db['chat-history'].insert_one(
             {
                 'SessionId': f'{str(knowledge.id)}:{session_id}',
                 'History': json.dumps(
@@ -106,7 +115,12 @@ async def chat_history(  # type: ignore
                 ),
             }
         )
-        history.append(welcome_message)
+
+        history = (
+            await host_db['chat-history']
+            .find({'SessionId': _filter})
+            .to_list(30)
+        )
 
     def parse(item):  # type: ignore
         history = json.loads(item['History'])  # type: ignore
@@ -119,9 +133,14 @@ async def chat_history(  # type: ignore
 
     chat_history = [parse(item) for item in history]  # type: ignore
 
+    suggestions = await list_sugestions_service.dispatch(
+        knowledge_id=knowledge.id
+    )
+
     response = {
         'knowledge': knowledge.model_dump(),
         'history': chat_history,
+        'suggestions': [suggestion.model_dump() for suggestion in suggestions],
     }
 
     return response

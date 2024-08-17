@@ -22,6 +22,15 @@ class SuggestionRepository:
         result = await self.collection.insert_one(payload_dict)
         return await self.get_or_rise(by='_id', value=result.inserted_id)
 
+    async def list(self, *, knowledge_id: ObjectId):
+        pipe = {'knowledge_id': knowledge_id}
+
+        result = await self.collection.find(pipe).to_list(None)
+        return [
+            SuggestionRetrieve.model_validate(suggestion)
+            for suggestion in result
+        ]
+
     async def get(
         self,
         *,
