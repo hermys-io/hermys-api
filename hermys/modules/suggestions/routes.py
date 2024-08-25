@@ -18,9 +18,10 @@ router = APIRouter()
 async def create_suggestion(
     payload: SuggestionCreatePayload,
     service: GetCreateSuggestionService,
-    _current_user: GetCurrentUser,
+    current_user: GetCurrentUser,
 ):
-    result = await service.dispatch(payload=payload)
+    result = await service.dispatch(current_user=current_user, payload=payload)
+
     return result.model_dump()
 
 
