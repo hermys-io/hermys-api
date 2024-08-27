@@ -22,7 +22,7 @@ async def test_me(
     token = await auth_service.get_token(login_credentials=login_credentials)
 
     response = client.get(
-        '/users/me',
+        '/user/me',
         headers={'Authorization': f'Bearer {token}'},
     )
 
@@ -35,7 +35,7 @@ async def test_me(
 @pytest.mark.anyio
 async def test_me_without_credentials(client: TestClient):
     response = client.get(
-        '/users/me',
+        '/user/me',
     )
 
     assert response.status_code == 401

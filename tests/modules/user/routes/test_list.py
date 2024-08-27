@@ -22,7 +22,7 @@ async def test_list(
     token = await auth_service.get_token(login_credentials=login_credentials)
 
     response = client.get(
-        '/users',
+        '/user',
         headers={'Authorization': f'Bearer {token}'},
     )
 

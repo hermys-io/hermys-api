@@ -29,7 +29,7 @@ async def test_create(
         'password': '12345Aa@',
     }
     response = client.post(
-        '/users',
+        '/user',
         json=payload,
         headers={'Authorization': f'Bearer {token}'},
     )
@@ -62,7 +62,7 @@ async def test_create_duplicated_user(
         'password': '12345Aa@',
     }
     response = client.post(
-        '/users',
+        '/user',
         json=payload,
         headers={'Authorization': f'Bearer {token}'},
     )
@@ -94,7 +94,7 @@ async def test_normal_user_cant_create_user(
         'password': '12345Aa@',
     }
     response = client.post(
-        '/users',
+        '/user',
         json=payload,
         headers={'Authorization': f'Bearer {token}'},
     )
