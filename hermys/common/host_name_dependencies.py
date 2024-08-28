@@ -6,7 +6,9 @@ from fastapi import Depends, Request
 
 def get_host_name(request: Request):
     referer = request.headers.get('referer')
+
     if not referer:
+        # TODO: Ajustar exceção customizada
         raise Exception()
 
     return urlparse(referer).netloc.split(':')[0]
