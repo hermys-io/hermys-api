@@ -1,4 +1,5 @@
 import os
+from typing import Optional
 
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain.chains.history_aware_retriever import (
@@ -53,7 +54,13 @@ class RAGService:
             model='text-embedding-ada-002',
         )
 
-    def invoke(self, *, session_id: str, quiestion: str) -> str:
+    def invoke(
+        self,
+        *,
+        session_id: str,
+        quiestion: str,
+        custom_context: Optional[str] = None,
+    ) -> str:
         vectorstore = PineconeVectorStore(
             pinecone_api_key=settings.PINECONE_API_KEY,
             index_name=self.index_name,
@@ -85,6 +92,7 @@ class RAGService:
         qa_system_prompt = self._get_prompt(
             clerk=self.clerk,
             knowledge=self.knowledge,
+            custom_context=custom_context,
         )
 
         qa_prompt = ChatPromptTemplate.from_messages(
@@ -130,8 +138,13 @@ class RAGService:
         *,
         clerk: ClerkRetrieve,
         knowledge: KnowledgeRetrieve,
+        custom_context: Optional[str] = None,
     ):
-        prompt = clerk.prompt.format(
+        clerk_prompt = clerk.prompt
+        if custom_context:
+            clerk_prompt = clerk_prompt + ' ' + custom_context
+
+        prompt = clerk_prompt.format(
             KNOWLEDGE=knowledge.prompt_copmlement,
             CONTEXT='{context}',
         )

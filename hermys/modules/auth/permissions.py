@@ -1,16 +1,11 @@
 from functools import wraps
 from typing import Any, Callable, List, TypeVar
 
-from fastapi import FastAPI
-
 from hermys.modules.auth.exceptions import DoesNotHavePermission
 from hermys.modules.user.enums import UserRoleEnum
 from hermys.modules.user.schemas import UserInternal
 
 F = TypeVar('F', bound=Callable[..., Any])
-
-
-app = FastAPI()
 
 
 def with_permissions(roles: List[UserRoleEnum]) -> Callable[[F], F]:

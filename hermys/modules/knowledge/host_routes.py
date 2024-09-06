@@ -1,4 +1,5 @@
 import json
+from typing import Optional
 
 from bson import ObjectId
 from fastapi import APIRouter
@@ -50,6 +51,7 @@ async def ask(
     knowledge_id: str,
     question: str,
     session_id: str,
+    context: Optional[str] = None,
 ):
     organization_repo = OrganizationRepository(db=db)
     knowledge_repo = KnowledgeRepository(db=host_db)
@@ -74,7 +76,11 @@ async def ask(
         knowledge=knowledge,
     )
 
-    response = rag.invoke(quiestion=question, session_id=session_id)
+    response = rag.invoke(
+        quiestion=question,
+        session_id=session_id,
+        custom_context=context,
+    )
 
     return response
 
