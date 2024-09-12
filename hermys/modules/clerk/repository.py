@@ -1,15 +1,13 @@
-from typing import Union
+from typing import Literal, TypeAlias, Union
 
 from bson import ObjectId
 from motor.motor_asyncio import AsyncIOMotorDatabase
-from slugify import slugify
 
-from hermys.modules.clerk.exceptions import ClerkAlreadyExists, ClerkNotFound
-from hermys.modules.clerk.schemas import (
-    ClerkCreatePayload,
-    ClerkRetrieve,
-    ClerkUpdatePayload,
-)
+from hermys.modules.clerk.exceptions import ClerkNotFound
+from hermys.modules.clerk.schemas import ClerkDBO, ClerkUpdatePayload
+
+ClerkGetBy: TypeAlias = Union[Literal['_id'], Literal['slug']]
+ClerkGetValue: TypeAlias = Union[str, ObjectId]
 
 
 class ClerkRepository:
@@ -21,20 +19,11 @@ class ClerkRepository:
     async def create(
         self,
         *,
-        payload: ClerkCreatePayload,
-    ) -> ClerkRetrieve:
-        slug = slugify(payload.name)
+        dbo: ClerkDBO,
+    ) -> ClerkDBO:
+        data_to_insert = dict(dbo)
 
-        if await self.get(by='slug', value=slug):
-            raise ClerkAlreadyExists()
-
-        payload_dict = payload.model_dump()
-        payload_dict['active'] = True
-        payload_dict['slug'] = slug
-        payload_dict['photo_light'] = None
-        payload_dict['photo_dark'] = None
-
-        result = await self.collection.insert_one(payload_dict)
+        result = await self.collection.insert_one(data_to_insert)
         return await self.get_or_rise(by='_id', value=result.inserted_id)
 
     async def update(self, *, clerk_id: ObjectId, payload: ClerkUpdatePayload):
@@ -48,22 +37,27 @@ class ClerkRepository:
     async def get(
         self,
         *,
-        by: str,
-        value: Union[str, ObjectId],
-    ) -> Union[ClerkRetrieve, None]:
+        by: ClerkGetBy,
+        value: ClerkGetValue,
+    ) -> Union[ClerkDBO, None]:
         result = await self.collection.find_one({by: value})
 
-        return ClerkRetrieve.model_validate(result) if result else None
+        return ClerkDBO.model_validate(result) if result else None
 
     async def get_or_rise(
         self,
         *,
-        by: str,
-        value: Union[str, ObjectId],
-    ) -> ClerkRetrieve:
+        by: ClerkGetBy,
+        value: ClerkGetValue,
+    ) -> ClerkDBO:
         result = await self.collection.find_one({by: value})
 
         if result:
-            return ClerkRetrieve.model_validate(result)
+            return ClerkDBO.model_validate(result)
 
         raise ClerkNotFound()
+
+    async def exists(self, *, by: ClerkGetBy, value: ClerkGetValue) -> bool:
+        result = await self.collection.find_one({by: value})
+
+        return bool(result)

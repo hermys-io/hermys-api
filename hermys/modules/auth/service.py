@@ -48,7 +48,6 @@ class AuthService:
             by='username',
             value=token_data.username,
         )
-
         if not user:
             raise Unauthorized()
 

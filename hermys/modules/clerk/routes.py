@@ -1,24 +1,25 @@
 from typing import Literal
 
-from fastapi import APIRouter, UploadFile
+from fastapi import APIRouter, UploadFile, status
 
 from hermys.modules.auth.dependencies import GetCurrentUser
 from hermys.modules.auth.permissions import with_permissions
 from hermys.modules.clerk.dependencies import GetClerkService
 from hermys.modules.clerk.schemas import ClerkCreatePayload
+from hermys.modules.clerk.services.create_clerk import GetCreateClerkService
 from hermys.modules.user.enums import UserRoleEnum
 
 router = APIRouter()
 
 
-@router.post('/')
-@with_permissions(roles=[UserRoleEnum.ADMIN])
+# @with_permissions(roles=[UserRoleEnum.ADMIN])
+@router.post('/', status_code=status.HTTP_201_CREATED)
 async def create_clerk(
     payload: ClerkCreatePayload,
-    clerk_service: GetClerkService,
-    _current_user: GetCurrentUser,
+    service: GetCreateClerkService,
+    current_user: GetCurrentUser,
 ):
-    result = await clerk_service.create(payload=payload)
+    result = await service.dispatch(current_user=current_user, payload=payload)
 
     return result.model_dump()
 

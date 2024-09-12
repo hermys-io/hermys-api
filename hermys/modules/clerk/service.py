@@ -8,11 +8,7 @@ from hermys.common.b2_helpers import get_clerk_filename
 from hermys.integrations.b2.integration import B2Integration
 from hermys.modules.clerk.exceptions import ClerkNotFound
 from hermys.modules.clerk.repository import ClerkRepository
-from hermys.modules.clerk.schemas import (
-    ClerkCreatePayload,
-    ClerkRetrieve,
-    ClerkUpdatePayload,
-)
+from hermys.modules.clerk.schemas import ClerkRetrieve, ClerkUpdatePayload
 from hermys.modules.user.schemas import UserInternal
 
 
@@ -24,16 +20,6 @@ class ClerkService:
     ) -> None:
         self.clerk_repo = clerk_repo
         self.b2_integration = b2_integration
-
-    async def create(
-        self,
-        *,
-        payload: ClerkCreatePayload,
-    ) -> ClerkRetrieve:
-        created_clerk = await self.clerk_repo.create(
-            payload=payload,
-        )
-        return ClerkRetrieve(**created_clerk.model_dump())
 
     async def update_photo(
         self,

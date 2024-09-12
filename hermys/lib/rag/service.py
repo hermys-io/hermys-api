@@ -15,7 +15,7 @@ from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_pinecone import PineconeVectorStore
 from pinecone import Pinecone  # type: ignore
 
-from hermys.modules.clerk.schemas import ClerkRetrieve
+from hermys.modules.clerk.schemas import ClerkDBO
 from hermys.modules.knowledge.schemas import KnowledgeRetrieve
 from hermys.modules.organization.schemas import OrganizationRetrieve
 from hermys.settings import get_settings
@@ -31,7 +31,7 @@ class RAGService:
         self,
         *,
         knowledge: KnowledgeRetrieve,
-        clerk: ClerkRetrieve,
+        clerk: ClerkDBO,
         organization: OrganizationRetrieve,
     ):
         os.environ['LANGCHAIN_PROJECT'] = organization.name
@@ -136,7 +136,7 @@ class RAGService:
     def _get_prompt(
         self,
         *,
-        clerk: ClerkRetrieve,
+        clerk: ClerkDBO,
         knowledge: KnowledgeRetrieve,
         custom_context: Optional[str] = None,
     ):

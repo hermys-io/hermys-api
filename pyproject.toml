@@ -24,6 +24,7 @@ langchain-pinecone = "^0.1.1"
 pypdf = "^4.3.0"
 langchain-mongodb = "^0.1.6"
 sentry-sdk = { extras = ["fastapi"], version = "^2.13.0" }
+pytest-fastapi-deps = "^0.2.3"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "0.4.9"
@@ -37,6 +38,7 @@ isort = "5.13.2"
 freezegun = "1.5.1"
 types-passlib = "1.7.7.20240327"
 types-python-jose = "3.3.4.20240106"
+pytest-mock = "^3.14.0"
 
 [tool.taskipy.tasks]
 dev = { cmd = "poetry run uvicorn hermys.main:app --reload", help = "Runs develop server" }
