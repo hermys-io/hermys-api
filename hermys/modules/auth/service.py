@@ -1,7 +1,10 @@
 from datetime import timedelta
 
-from hermys.modules.auth.exceptions import IncorrectUsernameOrPassword
-from hermys.modules.auth.jwt import create_token
+from hermys.modules.auth.exceptions import (
+    IncorrectUsernameOrPassword,
+    Unauthorized,
+)
+from hermys.modules.auth.jwt import create_token, decode_token
 from hermys.modules.auth.password import verify_password
 from hermys.modules.auth.schemas import AccessTokenData, LoginCredentialPayload
 from hermys.modules.user.repository import UserRepository
@@ -36,3 +39,16 @@ class AuthService:
             data=access_token_data.model_dump(),
             expires_delta=self.access_token_expiration,
         )
+
+    async def get_current_user(self, *, access_token: str):
+        decoded_data = decode_token(token=access_token)
+        token_data = AccessTokenData.model_validate(decoded_data)
+
+        user = await self.user_repo.get(
+            by='username',
+            value=token_data.username,
+        )
+        if not user:
+            raise Unauthorized()
+
+        return user

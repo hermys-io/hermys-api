@@ -11,11 +11,17 @@ from hermys.modules.user.enums import UserRoleEnum
 class UserBase(BaseModel):
     username: str = Field(default=...)
     organization: str = Field(default=...)
-    role: UserRoleEnum = Field(default=...)
+    role: UserRoleEnum = Field(default=UserRoleEnum.USER)
 
 
 class UserCreatePayload(UserBase):
     password: str = Field(default=...)
+
+    @field_validator('role')
+    def validate_allowed_roles(cls, role: UserRoleEnum):
+        if role == UserRoleEnum.GOD:
+            raise ValueError('choose a valid role')
+        return role
 
     @field_validator('password')
     def password_strength(cls, password: str):

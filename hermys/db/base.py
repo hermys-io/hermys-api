@@ -1,6 +1,7 @@
 from typing import Any
 
-from bson import InvalidBSON, ObjectId
+from bson import ObjectId
+from bson.errors import InvalidId
 from pydantic_core import PydanticCustomError, core_schema
 
 
@@ -29,7 +30,7 @@ class ObjectIdField(str):
     def validate(cls, value: str):
         try:
             return ObjectId(value)
-        except InvalidBSON as invalid_id:
+        except InvalidId as invalid_id:
             raise PydanticCustomError(
                 'value_error', 'invalid format for MongoDB object identifier'
             ) from invalid_id
